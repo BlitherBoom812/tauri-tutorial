@@ -7,8 +7,8 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "my-tauri",
-    "version": "0.0.1"
+    "productName": "StudyHelper",
+    "version": "0.1.0"
   },
   "tauri": {
     "systemTray": {
@@ -39,7 +39,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "com.blitherboom.studyhelper",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -55,7 +55,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "my-tauri",
+        "title": "StudyHelper",
         "width": 800,
         "height": 600
       }
