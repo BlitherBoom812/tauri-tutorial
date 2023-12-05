@@ -2,19 +2,33 @@ import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
-// import init, { greet as greet_wasm } from '@mywasm/foo'
+import React from 'react';
+import { Button, Flex } from 'antd';
+
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("");
+
+
 
   // useEffect(() => {
   //   // ✅  初始化，加载 wasm 文件
   //   init();
   // }, [])
 
-  async function read_hosts() {
+  // var def
+  const button_list = [
+    "量筒",
+    "通网",
+    '随机过程',
+    "DSP",
+    '计网',
+    '启动'
+  ]
+
+  async function open_file(name: string) {
+    const content = await invoke("handle_action", {name: name});
     // 注: `/etc/hosts` 为自定义路径，而非基本目录之一
-    const content = await invoke('my_read_file', { path: 'D:/developer/tauri-tutorial/my_tauri/my-tauri/tsconfig.json' });
     console.log(content);
   }
   
@@ -58,8 +72,14 @@ function App() {
       </form>
 
       <p>{greetMsg}</p>
-      <button onClick={() => read_hosts()}>write file</button>
-      {/* <button onClick={() => greet_wasm()}>click me(from wasm)</button> */}
+      <Flex vertical={false} align="center" justify="center">
+        {button_list.map((name) => (
+          <Button type="primary" onClick={() => open_file(name)} shape="round">
+            {name}
+          </Button>
+        ))}
+      </Flex>
+      
     </div>
   );
 }

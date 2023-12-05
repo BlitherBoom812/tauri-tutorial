@@ -38,11 +38,12 @@ pub fn handler(app: &AppHandle, event: SystemTrayEvent) {
             size: _,
             ..
         } => {
-            // toggle show/hide
+            // toggle show/hide, and set window on the top
             if window.is_visible().unwrap() {
                 window.hide().unwrap();
             } else {
                 window.show().unwrap();
+                let _ = window.set_focus();
             }
         }
         // 右键点击

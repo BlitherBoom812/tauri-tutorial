@@ -15,6 +15,30 @@ async fn my_read_file(path: std::path::PathBuf) -> String {
     std::fs::read_to_string(path).unwrap()
 }
 
+use std::collections::HashMap;
+
+#[tauri::command]
+fn handle_action(name: &str){
+    
+    let mut hw_dir_dict = HashMap::new();
+    hw_dir_dict.insert("量筒", HashMap::from([("args", ["D:\\STUDY\\课程资料\\量筒\\hw"]), ("program", ["explorer.exe"])]));
+    hw_dir_dict.insert("通网", HashMap::from([("args", ["D:\\STUDY\\课程资料\\通网\\hw"]), ("program", ["explorer.exe"])]));
+    hw_dir_dict.insert("随机过程", HashMap::from([("args", ["D:\\STUDY\\课程资料\\随机过程\\hw"]), ("program", ["explorer.exe"])]));
+    hw_dir_dict.insert("DSP", HashMap::from([("args", ["D:\\STUDY\\课程资料\\DSP"]), ("program", ["explorer.exe"])]));
+    hw_dir_dict.insert("计网", HashMap::from([("args", ["D:\\STUDY\\课程资料\\计网\\hw"]), ("program", ["explorer.exe"])]));
+    hw_dir_dict.insert("启动", HashMap::from([("program", ["C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"]), ("args", ["https://www.bilibili.com/video/BV1a14y1i7N4/"])]));
+
+    // print
+    println!("opening: {:?}", name);
+    // 调用系统命令，打开 program args
+    let mut cmd = std::process::Command::new(hw_dir_dict.get(name).unwrap().get("program").unwrap()[0]);
+    cmd.args(hw_dir_dict.get(name).unwrap().get("args").unwrap());
+    cmd.spawn().unwrap();
+    
+    
+}
+
+
 mod setup;
 mod tray;
 
@@ -25,7 +49,7 @@ fn main() {
         .system_tray(tray::menu()) // ✅ 将 `tauri.conf.json` 上配置的图标添加到系统托盘
         .on_system_tray_event(tray::handler) // 添加系统托盘的 handler
         .setup(setup::init)
-        .invoke_handler(tauri::generate_handler![greet, my_read_file]) // 添加传统 handler
+        .invoke_handler(tauri::generate_handler![greet, my_read_file, handle_action]) // 添加传统 handler
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
