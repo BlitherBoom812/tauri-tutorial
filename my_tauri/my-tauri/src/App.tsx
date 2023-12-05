@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
-import init, { greet as greet_wasm } from '@mywasm/foo'
+// import init, { greet as greet_wasm } from '@mywasm/foo'
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("");
 
-  useEffect(() => {
-    // ✅  初始化，加载 wasm 文件
-    init();
-  }, [])
+  // useEffect(() => {
+  //   // ✅  初始化，加载 wasm 文件
+  //   init();
+  // }, [])
 
   async function read_hosts() {
     // 注: `/etc/hosts` 为自定义路径，而非基本目录之一

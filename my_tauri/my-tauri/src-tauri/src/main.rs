@@ -16,11 +16,16 @@ async fn my_read_file(path: std::path::PathBuf) -> String {
 }
 
 mod setup;
+mod tray;
 
 fn main() {
+    let context = tauri::generate_context!();
     tauri::Builder::default()
+        .menu(tauri::Menu::os_default(&context.package_info().name))
+        .system_tray(tray::menu()) // ✅ 将 `tauri.conf.json` 上配置的图标添加到系统托盘
+        .on_system_tray_event(tray::handler) // 添加系统托盘的 handler
         .setup(setup::init)
-        .invoke_handler(tauri::generate_handler![greet, my_read_file])
+        .invoke_handler(tauri::generate_handler![greet, my_read_file]) // 添加传统 handler
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
