@@ -1,4 +1,4 @@
-import { Button, Collapse, CollapseProps, Flex } from 'antd';
+import { Button, Collapse, CollapseProps, Space } from 'antd';
 import React, { useState } from 'react';
 import { handle_action } from '../actions/cmd_run';
 
@@ -18,7 +18,7 @@ type CurriculumInfo = {
 
 type CurriculumBarProps = {
   curriculum_info: CurriculumInfo;
-  children: React.ReactNode;
+  // children: React.ReactNode;
 };
 
 const CurriculumBar: React.FC<CurriculumBarProps> = ({ curriculum_info }) => {
@@ -26,19 +26,22 @@ const CurriculumBar: React.FC<CurriculumBarProps> = ({ curriculum_info }) => {
   const [entered, useEntered] = useState(false);
   const content = (
     <div>
-      <Flex vertical={true} align="center" justify="center">
-        {curriculum_info.action_list.map((action_info) => {
-          return (
-            <Button
-              type="primary"
-              onClick={() => handle_action(action_info)}
-              shape="round"
-            >
-              {action_info.name}
-            </Button>
-          );
-        })}
-      </Flex>
+      {/* <Flex vertical={true} align="center" justify="center"> */}
+        <Space direction='vertical'>
+          {curriculum_info.action_list.map((action_info, i) => {
+            return (
+              <Button
+                type="primary"
+                onClick={() => handle_action(action_info)}
+                shape="round"
+                key={i}
+              >
+                {action_info.name}
+              </Button>
+            );
+          })}
+        </Space>
+      {/* </Flex> */}
     </div>
   );
 
@@ -47,7 +50,7 @@ const CurriculumBar: React.FC<CurriculumBarProps> = ({ curriculum_info }) => {
       key: defalut_key,
       label: curriculum_info.name,
       children: content,
-      showArrow: false
+      showArrow: false,
     },
   ];
   return (
@@ -59,7 +62,7 @@ const CurriculumBar: React.FC<CurriculumBarProps> = ({ curriculum_info }) => {
         useEntered(false);
       }}
     >
-      <Collapse items={items} activeKey={entered ? [defalut_key] : []}/>
+      <Collapse items={items} activeKey={entered ? [defalut_key] : []} style={{color: "#eeccff"}}/>
     </div>
   );
 };
