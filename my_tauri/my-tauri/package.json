@@ -1,8 +1,10 @@
 {
-  "name": "my-tauri",
+  "name": "study-helper",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "author": "BlitherBoom",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "rsw build && tsc && vite build",
