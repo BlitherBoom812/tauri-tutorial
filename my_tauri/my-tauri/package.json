@@ -16,6 +16,7 @@
     "@ant-design/icons": "^5.2.6",
     "@tauri-apps/api": "^1.5.1",
     "antd": "^5.12.1",
+    "axios": "^1.6.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.6"
