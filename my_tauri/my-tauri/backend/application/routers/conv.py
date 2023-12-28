@@ -11,6 +11,8 @@ import zipfile
 from fastapi import APIRouter, Body, Depends, File, Form, UploadFile, Query
 from pydantic import BaseModel
 import requests
+import openai
+import os
 
 from ..schemas.response_body import ResponseBody
 
@@ -38,3 +40,29 @@ def test(param: Dict) -> ResponseBody:
     return ResponseBody(data=json.dumps({"hello": "world"}),
                         success=True,
                         message="success")
+
+@router.post("/chat")
+def chat(param: Dict) -> ResponseBody:
+    """
+    chat
+    """
+    message = param.get("message")
+    print(param)
+
+    try:
+        print(f"received: ", param)
+        openai.api_base = os.environ['OPENAI_API_BASE']
+        openai.api_key = os.environ['OPENAI_API_KEY']
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo-16k",
+            messages=[{"role": "user", "content": message}],
+        )
+        result = response['choices'][0]['message']['content']
+        return ResponseBody(data=json.dumps({"hello": "world"}),
+                            success=True,
+                            message=result)
+    except Exception as e:
+        traceback.print_exc()
+        return ResponseBody(data=None,
+                            success=False,
+                            message=str(e))
