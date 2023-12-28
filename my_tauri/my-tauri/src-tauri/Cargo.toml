@@ -1,6 +1,6 @@
 [package]
 name = "study-helper"
-version = "1.0.0"
+version = "1.0.1"
 description = "Study Helper"
 authors = ["BlitherBoom812"]
 license = ""
