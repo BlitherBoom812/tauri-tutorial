@@ -1,11 +1,34 @@
+import { Button } from 'antd';
 import './App.css';
-import {CodeBlock} from './components/codeBlock';
+import { CodeBlock } from './components/codeBlock';
+import { CodeExe } from './components/code_executer';
+
+import {
+  Switch,
+  Route,
+  BrowserRouter,
+} from 'react-router-dom';
 
 function App() {
   return (
     <div className="container">
       {/* now, it is the time to build antd components */}
-      <CodeBlock></CodeBlock>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/">
+            <CodeBlock></CodeBlock>
+          </Route>
+          <Route path="/codeBlock">
+            <CodeBlock></CodeBlock>
+          </Route>
+          <Route path="/codeExe">
+            <CodeExe></CodeExe>
+          </Route>
+          <Route path="/button">
+            <Button></Button>
+          </Route>
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 }

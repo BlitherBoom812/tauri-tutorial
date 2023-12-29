@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Result, Tooltip, message } from 'antd';
-import { CaretRightOutlined, SmileOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Result, Tooltip } from 'antd';
+import { CaretRightOutlined, CodeOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
 const { TextArea } = Input;
@@ -9,14 +9,14 @@ type FieldType = {
   message?: string;
 };
 
-const CodeBlock: React.FC = () => {
+const CodeExe: React.FC = () => {
   const [resultText, setResultText] = useState('');
 
   const onFinish = (values: FieldType) => {
     setResultText('Play...');
     // send post request to backend
     axios
-      .post('http://localhost:12345/conv/chat', {
+      .post('http://localhost:12345/conv/execution', {
         message: values.message
       })
       .then(function (response) {
@@ -27,7 +27,6 @@ const CodeBlock: React.FC = () => {
         console.log(error);
         setResultText(error.message);
       });
-
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -64,10 +63,9 @@ const CodeBlock: React.FC = () => {
           <TextArea rows={4} />
         </Form.Item>
       </Form>
-      {/* <Result icon={<SmileOutlined />} title={resultText}/> */}
-      <p><SmileOutlined />{resultText}</p>
+      <p><CodeOutlined />{resultText}</p>
     </div>
   );
 };
 
-export { CodeBlock };
+export { CodeExe };

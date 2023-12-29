@@ -66,3 +66,23 @@ def chat(param: Dict) -> ResponseBody:
         return ResponseBody(data=None,
                             success=False,
                             message=str(e))
+
+@router.post("/execution")
+def execution(param: Dict) -> ResponseBody:
+    """
+    execution
+    """
+    message = param.get("message")
+    print(param)
+
+    try:
+        exec(message)
+        result = "success"
+        return ResponseBody(data=json.dumps({"hello": "world"}),
+                            success=True,
+                            message=result)
+    except Exception as e:
+        traceback.print_exc()
+        return ResponseBody(data=None,
+                            success=False,
+                            message=str(e))
