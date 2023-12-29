@@ -3,11 +3,8 @@ import './App.css';
 import { CodeBlock } from './components/codeBlock';
 import { CodeExe } from './components/code_executer';
 
-import {
-  Switch,
-  Route,
-  BrowserRouter,
-} from 'react-router-dom';
+import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { WebButton } from './components/webButton';
 
 function App() {
   return (
@@ -24,8 +21,8 @@ function App() {
           <Route path="/codeExe">
             <CodeExe></CodeExe>
           </Route>
-          <Route path="/button">
-            <Button></Button>
+          <Route path="/button/:name/:action" component={WebButton}>
+            {/* <WebButton></WebButton> */}
           </Route>
         </Switch>
       </BrowserRouter>

@@ -86,3 +86,25 @@ def execution(param: Dict) -> ResponseBody:
         return ResponseBody(data=None,
                             success=False,
                             message=str(e))
+
+
+@router.post("/button")
+def button(param: Dict) -> ResponseBody:
+    """
+    button
+    """
+    action = param.get("action")
+    print(param)
+
+    try:
+        # run command
+        os.system(action)
+        result = "success"
+        return ResponseBody(data=json.dumps({"hello": "world"}),
+                            success=True,
+                            message=result)
+    except Exception as e:
+        traceback.print_exc()
+        return ResponseBody(data=None,
+                            success=False,
+                            message=str(e))
