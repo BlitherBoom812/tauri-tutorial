@@ -12,7 +12,6 @@ from fastapi import APIRouter, Body, Depends, File, Form, UploadFile, Query
 from pydantic import BaseModel
 import requests
 import openai
-import os
 
 from ..schemas.response_body import ResponseBody
 
@@ -98,7 +97,8 @@ def button(param: Dict) -> ResponseBody:
 
     try:
         # run command
-        os.system(action)
+        import subprocess
+        subprocess.Popen(action, shell=True)
         result = "success"
         return ResponseBody(data=json.dumps({"hello": "world"}),
                             success=True,
