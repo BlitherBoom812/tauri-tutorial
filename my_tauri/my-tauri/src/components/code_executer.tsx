@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import { Button, Form, Tooltip } from 'antd';
-import { CodeOutlined } from '@ant-design/icons';
+import { Button, Flex, Form, Tooltip, message } from 'antd';
+import {
+  CaretRightOutlined,
+  CodeOutlined,
+  CopyOutlined,
+} from '@ant-design/icons';
 import axios from 'axios';
 import CodeEditor from './code_editor';
+import { Typography } from 'antd';
+import { copyCodeLet } from '../helpers/myCopy';
+const { Paragraph } = Typography;
 
 type FieldType = {
   message?: string;
 };
 
-const CodeExe: React.FC = () => {
+const CodeExe: React.FC<any> = (props: any) => {
+  const [content, setContent] = useState(props.match.params.content);
   const [resultText, setResultText] = useState('');
 
   const onFinish = (values: FieldType) => {
@@ -16,7 +24,7 @@ const CodeExe: React.FC = () => {
     // send post request to backend
     axios
       .post('http://localhost:12345/conv/execution', {
-        message: values.message
+        message: values.message,
       })
       .then(function (response) {
         console.log(response.data.message);
@@ -32,27 +40,47 @@ const CodeExe: React.FC = () => {
     console.log('Failed:', errorInfo);
   };
 
+  const onCopyClick = () => {
+    copyCodeLet(
+      window.location.origin + '/codeExe/' + encodeURIComponent(content),
+      "100%", 
+      "300"
+    );
+    message.success('Copied!');
+  };
 
   return (
     <div style={{ width: '100%' }}>
       <Form
-        layout='inline'
+        layout="inline"
         name="basic"
-        initialValues={{ message: 'print("hello, notebook!")' }}
+        initialValues={{ message: content }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
         style={{ width: '100%' }}
+        onValuesChange={(values) => {
+          setContent(values.message);
+        }}
       >
         <Form.Item>
-          <Tooltip title="play">
-            <Button
-              htmlType="submit"
-              shape="circle"
-              icon={<CodeOutlined />}
-              size="middle"
-            ></Button>
-          </Tooltip>
+          <Flex vertical={true} gap="middle">
+            <Tooltip title="play">
+              <Button
+                htmlType="submit"
+                shape="circle"
+                icon={<CaretRightOutlined />}
+                size="middle"
+              ></Button>
+            </Tooltip>
+            <Tooltip title="Copy URL">
+              <Button
+                shape="circle"
+                icon={<CopyOutlined />}
+                onClick={onCopyClick}
+              ></Button>
+            </Tooltip>
+          </Flex>
         </Form.Item>
 
         <Form.Item<FieldType>
@@ -60,10 +88,13 @@ const CodeExe: React.FC = () => {
           style={{ width: '80%' }}
           rules={[{ required: true, message: 'Please input your message!' }]}
         >
-          <CodeEditor/>
+          <CodeEditor />
         </Form.Item>
       </Form>
-      <p><CodeOutlined />{resultText}</p>
+      <Paragraph>
+        <CodeOutlined />
+        <pre style={{ textAlign: 'left' }}>{resultText}</pre>
+      </Paragraph>
     </div>
   );
 };

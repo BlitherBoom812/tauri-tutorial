@@ -7,6 +7,7 @@ import {
 import { Button, Flex, Input, Tooltip, message } from 'antd';
 import axios from 'axios';
 import { useState } from 'react';
+import { copyCodeLet } from '../helpers/myCopy';
 
 const WebButton: React.FC<any> = (props: any) => {
   console.log(props);
@@ -46,12 +47,14 @@ const WebButton: React.FC<any> = (props: any) => {
   };
   const onCopyClick = () => {
     // copy current url
-    navigator.clipboard.writeText(
-      window.location.origin + props.base_path +
-        '/' +
+    copyCodeLet(
+      window.location.origin +
+        '/button/' +
         encodeURIComponent(name) +
         '/' +
-        encodeURIComponent(action)
+        encodeURIComponent(action),
+        "100%",
+        "60"
     );
     message.success('Copied!');
   };

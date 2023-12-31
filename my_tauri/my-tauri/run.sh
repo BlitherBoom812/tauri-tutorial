@@ -1,2 +1,2 @@
-./env_var.sh
+source ./env_var.sh
 python -m main

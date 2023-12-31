@@ -1,12 +1,9 @@
-import { Button } from 'antd';
 import './App.css';
 import { CodeBlock } from './components/codeBlock';
 import { CodeExe } from './components/code_executer';
 
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { WebButton } from './components/webButton';
-import { WebComponent } from './components/webComponent';
-import TextArea from 'antd/es/input/TextArea';
 
 function App() {
   return (
@@ -14,20 +11,14 @@ function App() {
       {/* now, it is the time to build antd components */}
       <BrowserRouter>
         <Switch>
-          <Route exact path="/">
-            <CodeBlock></CodeBlock>
+          <Route exact path="/" component={CodeBlock}>
           </Route>
-          <Route path="/codeBlock">
-            <CodeBlock></CodeBlock>
+          <Route path="/codeBlock/:content" component={CodeBlock}>
           </Route>
-          <Route path="/codeExe">
-            <CodeExe></CodeExe>
+          <Route path="/codeExe/:content" component={CodeExe}>
           </Route>
-          <WebComponent
-            base_path="/button"
-            params_path="/:name/:action"
-            child={WebButton}
-          ></WebComponent>
+          <Route path="/button/:name/:action" component={WebButton}>
+          </Route>
         </Switch>
       </BrowserRouter>
     </div>

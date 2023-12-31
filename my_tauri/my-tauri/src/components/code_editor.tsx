@@ -9,8 +9,7 @@ interface CodeEditorProps {
 
 const App: React.FC<CodeEditorProps> = ({ value = '', onChange }) => {
   const [code, setCode] = React.useState(value || '');
-  const onEditorChange = React.useCallback((val: string, viewUpdate: any) => {
-    console.log('val:', val);
+  const onEditorChange = React.useCallback((val: string) => {
     setCode(code);
     onChange?.(val);
   }, []);
