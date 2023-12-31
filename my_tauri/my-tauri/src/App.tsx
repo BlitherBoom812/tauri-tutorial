@@ -5,6 +5,8 @@ import { CodeExe } from './components/code_executer';
 
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { WebButton } from './components/webButton';
+import { WebComponent } from './components/webComponent';
+import TextArea from 'antd/es/input/TextArea';
 
 function App() {
   return (
@@ -21,9 +23,11 @@ function App() {
           <Route path="/codeExe">
             <CodeExe></CodeExe>
           </Route>
-          <Route path="/button/:name/:action" component={WebButton}>
-            {/* <WebButton></WebButton> */}
-          </Route>
+          <WebComponent
+            base_path="/button"
+            params_path="/:name/:action"
+            child={WebButton}
+          ></WebComponent>
         </Switch>
       </BrowserRouter>
     </div>

@@ -1,12 +1,20 @@
-import { CodeOutlined, CopyOutlined, MonitorOutlined } from '@ant-design/icons';
+import {
+  CodeOutlined,
+  CopyOutlined,
+  InfoCircleOutlined,
+  MonitorOutlined,
+} from '@ant-design/icons';
 import { Button, Flex, Input, Tooltip, message } from 'antd';
 import axios from 'axios';
 import { useState } from 'react';
 
-const WebButton: React.FC = (props: any) => {
+const WebButton: React.FC<any> = (props: any) => {
+  console.log(props);
   const [editing, setEditing] = useState(false);
   const decoded_action = decodeURIComponent(props.match.params.action);
   const [action, setAction] = useState(decoded_action);
+  const decoded_name = decodeURIComponent(props.match.params.name);
+  const [name, setName] = useState(decoded_name);
   const onActionClick = () => {
     console.log('acting: ', action);
     axios
@@ -27,15 +35,24 @@ const WebButton: React.FC = (props: any) => {
     console.log('edit');
   };
 
-  const onEditChange = (val: any) => {
+  const onEditCodeChange = (val: any) => {
     console.log(val.target.value);
     setAction(val.target.value);
-    props.match.params.action = val.target.value;
+  };
+
+  const onEditNameChange = (val: any) => {
+    console.log(val.target.value);
+    setName(val.target.value);
   };
   const onCopyClick = () => {
-    console.log('copy');
     // copy current url
-    navigator.clipboard.writeText(window.location.origin + '/button/' + props.match.params.name +  '/' + encodeURIComponent(action));
+    navigator.clipboard.writeText(
+      window.location.origin + props.base_path +
+        '/' +
+        encodeURIComponent(name) +
+        '/' +
+        encodeURIComponent(action)
+    );
     message.success('Copied!');
   };
 
@@ -46,8 +63,15 @@ const WebButton: React.FC = (props: any) => {
           <Flex vertical={false} style={{ width: '100%' }}>
             <Input
               prefix={<CodeOutlined className="site-form-item-icon" />}
-              onChange={onEditChange}
+              onChange={onEditCodeChange}
               defaultValue={action}
+              style={{ width: '50%' }}
+            ></Input>
+            <Input
+              prefix={<InfoCircleOutlined className="site-form-item-icon" />}
+              onChange={onEditNameChange}
+              defaultValue={name}
+              style={{ width: '50%' }}
             ></Input>
             <Tooltip title="Copy URL">
               <Button
@@ -59,7 +83,7 @@ const WebButton: React.FC = (props: any) => {
           </Flex>
         ) : (
           <Button onClick={onActionClick} style={{ width: '100%' }}>
-            {props.match.params.name}
+            {name}
           </Button>
         )}
         <Button
