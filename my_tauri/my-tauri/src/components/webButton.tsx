@@ -8,13 +8,14 @@ import { Button, Flex, Input, Tooltip, message } from 'antd';
 import axios from 'axios';
 import { useState } from 'react';
 import { copyCodeLet } from '../helpers/myCopy';
+import { replaceDot, resumeDot } from '../helpers/myReplace';
 
 const WebButton: React.FC<any> = (props: any) => {
   console.log(props);
   const [editing, setEditing] = useState(false);
-  const decoded_action = decodeURIComponent(props.match.params.action);
+  const decoded_action = decodeURIComponent(resumeDot(props.match.params.action));
   const [action, setAction] = useState(decoded_action);
-  const decoded_name = decodeURIComponent(props.match.params.name);
+  const decoded_name = decodeURIComponent(resumeDot(props.match.params.name));
   const [name, setName] = useState(decoded_name);
   const onActionClick = () => {
     console.log('acting: ', action);
@@ -47,12 +48,13 @@ const WebButton: React.FC<any> = (props: any) => {
   };
   const onCopyClick = () => {
     // copy current url
+    console.log(`action: ${action}, replaced_action: ${replaceDot(action)}`)
     copyCodeLet(
       window.location.origin +
         '/button/' +
-        encodeURIComponent(name) +
+        encodeURIComponent(replaceDot(name)) +
         '/' +
-        encodeURIComponent(action),
+        encodeURIComponent(replaceDot(action)),
         "100%",
         "60"
     );

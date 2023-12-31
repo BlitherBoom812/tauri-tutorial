@@ -8,6 +8,7 @@ import {
 import axios from 'axios';
 import { Typography } from 'antd';
 import { copyCodeLet } from '../helpers/myCopy';
+import { replaceDot, resumeDot } from '../helpers/myReplace';
 const { Paragraph } = Typography;
 
 const { TextArea } = Input;
@@ -17,7 +18,7 @@ type FieldType = {
 };
 
 const CodeBlock: React.FC<any> = (props: any) => {
-  const [content, setContent] = useState(props.match.params.content);
+  const [content, setContent] = useState(resumeDot(props.match.params.content));
   const [resultText, setResultText] = useState('');
 
   const onFinish = (values: FieldType) => {
@@ -43,7 +44,7 @@ const CodeBlock: React.FC<any> = (props: any) => {
 
   const onCopyClick = () => {
     copyCodeLet(
-      window.location.origin + '/codeBlock/' + encodeURIComponent(content),
+      window.location.origin + '/codeBlock/' + encodeURIComponent(replaceDot(content)),
       "100%",
       "300"
     );

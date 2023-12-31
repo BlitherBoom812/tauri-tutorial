@@ -1,6 +1,6 @@
 import './App.css';
 import { CodeBlock } from './components/codeBlock';
-import { CodeExe } from './components/code_executer';
+import { CodeExe } from './components/codeExecuter';
 
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { WebButton } from './components/webButton';

@@ -6,9 +6,10 @@ import {
   CopyOutlined,
 } from '@ant-design/icons';
 import axios from 'axios';
-import CodeEditor from './code_editor';
+import CodeEditor from './codeEditor';
 import { Typography } from 'antd';
 import { copyCodeLet } from '../helpers/myCopy';
+import { replaceDot, resumeDot } from '../helpers/myReplace';
 const { Paragraph } = Typography;
 
 type FieldType = {
@@ -16,7 +17,7 @@ type FieldType = {
 };
 
 const CodeExe: React.FC<any> = (props: any) => {
-  const [content, setContent] = useState(props.match.params.content);
+  const [content, setContent] = useState(resumeDot(props.match.params.content));
   const [resultText, setResultText] = useState('');
 
   const onFinish = (values: FieldType) => {
@@ -42,7 +43,7 @@ const CodeExe: React.FC<any> = (props: any) => {
 
   const onCopyClick = () => {
     copyCodeLet(
-      window.location.origin + '/codeExe/' + encodeURIComponent(content),
+      window.location.origin + '/codeExe/' + encodeURIComponent(replaceDot(content)),
       "100%", 
       "300"
     );
