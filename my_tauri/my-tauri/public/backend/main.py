@@ -3,7 +3,7 @@ import os
 import uvicorn
 
 if __name__ == "__main__":
-    uvicorn.run(app="backend.application.app:app",
+    uvicorn.run(app="public.backend.application.app:app",
                 host="localhost",
                 port=12345,
                 reload=True,

@@ -15,5 +15,10 @@ pub fn init(app: &mut App) -> std::result::Result<(), Box<dyn std::error::Error>
     window_vibrancy::apply_blur(&win, Some((100, 100, 100, 100)))
         .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
 
+        let mut cmd = std::process::Command::new("python")
+        .arg("main.py")
+        .spawn()
+        .expect("failed to execute process");
+
     Ok(())
 }
