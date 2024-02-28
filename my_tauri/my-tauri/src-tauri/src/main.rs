@@ -19,31 +19,15 @@ mod setup;
 mod tray;
 mod my_handlers;
 
-use windows_hotkeys::keys::{ModKey, VKey};
-use windows_hotkeys::{HotkeyManager, HotkeyManagerImpl};
-
-fn set_hotkey() {
-    let mut hkm = HotkeyManager::new();
-
-    hkm.register(VKey::A, &[ModKey::Ctrl], || {
-        println!("Hotkey ALT + A was pressed");
-    })
-    .unwrap();
-
-    hkm.event_loop();
-}
-
 fn main() {
     let context = tauri::generate_context!();
     tauri::Builder::default()
-        .menu(tauri::Menu::os_default(&context.package_info().name))
+        // .menu(tauri::Menu::os_default(&context.package_info().name))
         .system_tray(tray::menu()) // ✅ 将 `tauri.conf.json` 上配置的图标添加到系统托盘
         .on_system_tray_event(tray::handler) // 添加系统托盘的 handler
         .setup(setup::init)
         .invoke_handler(tauri::generate_handler![my_handlers::handle_action]) // 添加传统 handler
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
-
-    set_hotkey();
 }
 

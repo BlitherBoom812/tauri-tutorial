@@ -3,24 +3,13 @@ import { Flex, Space } from 'antd';
 import { CurriculumBar } from './components/curriculum';
 import { CurriculumList } from './data/user_data';
 import Draggable from 'react-draggable';
+import SearchBox from './components/searchbar';
 
 function App() {
   return (
     <div className="container">
       {/* now, it is the time to build antd components */}
-      <Flex vertical={false} align="center" justify="center">
-        <Space>
-          {CurriculumList.map((curriculum_dict, i) => (
-            <div key={i}>
-              <Draggable>
-                <div className="drag-handler">
-                  <CurriculumBar curriculum_info={curriculum_dict} />
-                </div>
-              </Draggable>
-            </div>
-          ))}
-        </Space>
-      </Flex>
+      <SearchBox></SearchBox>
     </div>
   );
 }

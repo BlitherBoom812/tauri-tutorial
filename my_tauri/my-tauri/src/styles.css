@@ -4,8 +4,8 @@
   line-height: 24px;
   font-weight: 400;
 
-  color: #0f0f0f;
-  background-color: #f6f6f6;
+  color: #00000000;
+  background-color: #00000000;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -15,6 +15,7 @@
 }
 
 .container {
+  background-color: #00000000;
   margin: 0;
   padding-top: 10vh;
   display: flex;
@@ -106,4 +107,12 @@ button {
   button:active {
     background-color: #0f0f0f69;
   }
+}
+
+
+.search-bar {
+  font-family: Consolas;
+  font-weight: bold;
+  border: 3px solid #0cb7e6b2; /* 使用灰色粗边框 */
+  border-radius: 100px;
 }

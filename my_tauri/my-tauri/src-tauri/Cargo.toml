@@ -16,11 +16,14 @@ tauri-build = { version = "1.5", features = [] }
 tauri = { version = "1.5", features = [ "system-tray", "fs-all", "shell-open"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-window-vibrancy = "0.4.3"
 hotkey = "0.3.1"
 global-hotkey = "0.4.1"
 winit = "0.29.4"
 windows-hotkeys = "0.2.1"
+windows = { version = "0.54.0", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+] }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

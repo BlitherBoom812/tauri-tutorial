@@ -54,10 +54,14 @@
     "windows": [
       {
         "fullscreen": false,
-        "resizable": true,
-        "title": "StudyHelper",
+        "resizable": false,
+        "visible": true,
+        "title": "SpellMagic",
+        "alwaysOnTop": true,
+        "decorations": false,
+        "transparent": true,
         "width": 800,
-        "height": 600
+        "height": 80
       }
     ]
   }
