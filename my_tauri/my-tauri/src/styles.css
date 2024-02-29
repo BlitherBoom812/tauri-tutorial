@@ -125,6 +125,7 @@ button {
 .search-bar {
   font-family: Consolas;
   font-weight: bold;
+  color: linear-gradient(90deg, #29bcd9a4 0%, #276acebf 100%);
   background-color: rgba(255, 255, 255, 0.6);
   background-image: linear-gradient(90deg, #29bcd9a4 0%, #276acebf 100%);
   border: 3px solid #0cb7e65e;
@@ -163,4 +164,23 @@ button {
   font-weight: bold;
   background-color: #f0f0f0; /* 浅灰色背景 */
   background: linear-gradient(to right, #f6d365 0%, #fda085 100%);
+}
+
+.font-style {
+  font-family: Consolas;
+  font-weight: bold;
+  font-size: large;
+  padding: 0%;
+  margin: 0%;
+}
+
+.red-style {
+  stop-color:#f6d365; 
+  stop-opacity:1;
+}
+
+
+.blue-style {
+  stop-color:#fda085; 
+  stop-opacity:1;
 }

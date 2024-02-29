@@ -13,7 +13,7 @@ function createWindow() {
     transparent: true,
     width: 1000,
     height: 1000,
-    center: true
+    center: true,
   });
   // since the webview window is created asynchronously,
   // Tauri emits the `tauri://created` and `tauri://error` to notify you of the creation response
@@ -31,15 +31,14 @@ function createWindow() {
 }
 const webview = createWindow();
 
-
 function Author() {
-
   const text = 'Made by BlitherBoom812';
   // visit every char for text
   const array = text.split(' ');
-  
+
   return (
     <div
+      data-tauri-drag-region
       onClick={async () => {
         if (await webview.isVisible()) {
           webview.hide();
@@ -57,4 +56,4 @@ function Author() {
 
 export default Author;
 
-// task: 1. draggable(ok) 2. resize with content(ok) 3. shining spell 4. esc exit(ok) 5. colorful!(ok)
+// task: 1. draggable(ok) 2. resize with content(ok) 3. shining spell(half) 4. esc exit(ok) 5. colorful!(ok)

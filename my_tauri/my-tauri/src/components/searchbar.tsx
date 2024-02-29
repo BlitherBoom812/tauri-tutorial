@@ -10,6 +10,8 @@ import {
 import { handle_spell, spell_set } from '../actions/cmd_run';
 import { LogicalSize, appWindow } from '@tauri-apps/api/window';
 import { grip_vertical } from '../assets/icons';
+import '../styles.css';
+import { gradientText } from '../assets/gradient';
 /*
  * 已知 bug: 多个 spell 同时执行时 会将执行结果同时替换
  */
@@ -172,7 +174,7 @@ function SearchBox() {
         </Button>
         <InputGroup className="mb-3">
           <FormControl
-            className="search-bar"
+            className="search-bar gradient"
             placeholder="Spell here..."
             aria-label="Search..."
             aria-describedby="basic-addon2"
@@ -181,6 +183,7 @@ function SearchBox() {
           />
         </InputGroup>
       </div>
+      {/* {gradientText(searchText, 'font-style', 'red-style', 'blue-style')} */}
       <Dropdown
         show={showDropdown}
         onToggle={() => setShowDropdown(!showDropdown)}
@@ -200,7 +203,9 @@ function SearchBox() {
               </Dropdown.Item>
             ))
           ) : (
-            <Dropdown.Item>No Matches</Dropdown.Item>
+            <Dropdown.Item className="custom-dropdown-item">
+              No Matches
+            </Dropdown.Item>
           )}
         </Dropdown.Menu>
       </Dropdown>
