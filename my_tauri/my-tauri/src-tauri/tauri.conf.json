@@ -60,7 +60,7 @@
         "resizable": false,
         "visible": true,
         "title": "SpellMagic",
-        "alwaysOnTop": false,
+        "alwaysOnTop": true,
         "decorations": false,
         "transparent": true,
         "width": 300,

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Dropdown, FormControl, InputGroup } from 'react-bootstrap';
 import { handle_spell, spell_set } from '../actions/cmd_run';
+import { LogicalSize, appWindow } from '@tauri-apps/api/window';
+import { PhysicalSize } from '@tauri-apps/api/window';
 /*
  * 已知 bug: 多个 spell 同时执行时 会将执行结果同时替换
  */
@@ -21,6 +23,17 @@ function SearchBox() {
     setShowDropdown(condition);
   };
 
+  const resizeWindow = async () => {
+    const factor = await appWindow.scaleFactor();
+    const size = await appWindow.innerSize();
+    const logical_size = size.toLogical(factor);
+    const height = document.body.scrollHeight + 70;
+    const width = logical_size.width;
+    console.log(`clientHeight: ${document.body.clientHeight}`);
+    console.log(`scrollHeight: ${document.body.scrollHeight}`);
+    await appWindow.setSize(new LogicalSize(width, height));
+  };
+
   const onSelectHandler = (value: any) => {
     // if (suggestionField && suggestionField.length > 0) {
     //   const suggested_text = searchText.replace(suggestionField, value);
@@ -29,20 +42,20 @@ function SearchBox() {
     //   console.log(`suggested_text: ${suggested_text}`);
     //   setSearchText(suggested_text);
     // }
-    
+
     const match = match_rules_all(searchText);
     if (match && match.length > 0) {
       const to_be_matched = match[match.length - 1];
-      var suggestionTemplate = "";
-      if (to_be_matched.startsWith("<")) {
-        suggestionTemplate = "<{content}";
-        to_be_matched.replace("<", "");
+      var suggestionTemplate = '';
+      if (to_be_matched.startsWith('<')) {
+        suggestionTemplate = '<{content}';
+        to_be_matched.replace('<', '');
       } else {
-        suggestionTemplate = "{content}";
+        suggestionTemplate = '{content}';
       }
-      const new_value = suggestionTemplate.replace("{content}", value);
-      console.log(`suggestionTemplete: ${suggestionTemplate}`)
-      console.log(`new value: ${new_value}`)
+      const new_value = suggestionTemplate.replace('{content}', value);
+      console.log(`suggestionTemplete: ${suggestionTemplate}`);
+      console.log(`new value: ${new_value}`);
       const search_array = searchText.split(' ');
       search_array.pop();
       search_array.push(new_value);
@@ -66,7 +79,7 @@ function SearchBox() {
     const match = match_rules_all(text);
     if (match) {
       // console.log('matching: ' + match);
-      const to_be_matched = match[match.length - 1].replace("<", "");
+      const to_be_matched = match[match.length - 1].replace('<', '');
       return to_be_matched;
     } else {
       return '';
@@ -97,15 +110,23 @@ function SearchBox() {
         // Esc 键
         setShowDropdown(false);
         setSelectedSuggestionIndex(-1); // 重置选中的建议项索引
+      } else if (e.code === 'Backspace') {
+        // 删除键
+        // emit('searchbox', {
+        //   content: "searchbox-backspace"
+        // });
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
-
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [filteredSuggestions, selectedSuggestionIndex, onSelectHandler]);
+
+  useEffect(() => {
+    resizeWindow();
+  });
 
   // 定义处理搜索框变化的回调函数
   const handleSearchInputChange = async (
@@ -140,7 +161,7 @@ function SearchBox() {
   };
 
   return (
-    <Container>
+    <Container className="search-bar-container">
       <InputGroup className="mb-3">
         <FormControl
           className="search-bar"

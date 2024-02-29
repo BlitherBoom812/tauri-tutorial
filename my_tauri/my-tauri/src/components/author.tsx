@@ -1,5 +1,5 @@
 import '../styles/shining_txt.css';
-import { PhysicalSize, WebviewWindow } from '@tauri-apps/api/window';
+import { WebviewWindow } from '@tauri-apps/api/window';
 
 function createWindow() {
   const webview = new WebviewWindow('searchbox', {
@@ -12,7 +12,7 @@ function createWindow() {
     decorations: false,
     transparent: true,
     width: 1000,
-    height: 100,
+    height: 1000,
     center: true
   });
   // since the webview window is created asynchronously,
@@ -31,6 +31,7 @@ function createWindow() {
 }
 const webview = createWindow();
 
+
 function Author() {
 
   const text = 'Made by BlitherBoom812';
@@ -47,11 +48,13 @@ function Author() {
         }
       }}
     >
-      {array.map((item, _) => (
-        <span>{item} </span>
+      {array.map((item, i) => (
+        <span key={i}>{item} </span>
       ))}
     </div>
   );
 }
 
 export default Author;
+
+// task: 1. draggable 2. resize with content 3. shining spell
