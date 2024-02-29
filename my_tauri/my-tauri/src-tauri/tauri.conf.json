@@ -21,6 +21,9 @@
         "all": false,
         "open": true
       },
+      "window": {
+        "all": true
+      },
       "fs": {
         "scope": [
           "$APP/databases/*"
@@ -57,7 +60,7 @@
         "resizable": false,
         "visible": true,
         "title": "SpellMagic",
-        "alwaysOnTop": true,
+        "alwaysOnTop": false,
         "decorations": false,
         "transparent": true,
         "width": 800,
