@@ -57,4 +57,4 @@ function Author() {
 
 export default Author;
 
-// task: 1. draggable 2. resize with content 3. shining spell
+// task: 1. draggable 2. resize with content(ok) 3. shining spell 4. esc exit(ok)

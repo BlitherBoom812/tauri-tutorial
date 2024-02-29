@@ -1,6 +1,6 @@
 import { invoke } from '@tauri-apps/api/tauri';
 import { ActionInfo } from '../components/curriculum';
-
+import { appWindow } from '@tauri-apps/api/window';
 async function open_file(name: string) {
   const content = await invoke('handle_action_old', { name: name });
   // 注: `/etc/hosts` 为自定义路径，而非基本目录之一
@@ -64,7 +64,8 @@ async function handle_spell(spell: string) {
         result = prefix + '(Success)';
         break;
       case 'exit':
-        result = prefix + '(Success)';
+        appWindow.hide();
+        result = "";
         break;
       case 'date':
         result = new Date().toLocaleString();
