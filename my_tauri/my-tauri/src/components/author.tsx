@@ -5,7 +5,7 @@ function createWindow() {
   const webview = new WebviewWindow('searchbox', {
     url: 'searchbox',
     fullscreen: false,
-    resizable: false,
+    resizable: true,
     visible: true,
     title: 'searchbox',
     alwaysOnTop: true,
@@ -57,4 +57,4 @@ function Author() {
 
 export default Author;
 
-// task: 1. draggable 2. resize with content(ok) 3. shining spell 4. esc exit(ok)
+// task: 1. draggable(ok) 2. resize with content(ok) 3. shining spell 4. esc exit(ok) 5. colorful!(ok)

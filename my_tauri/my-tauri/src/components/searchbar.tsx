@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Dropdown, FormControl, InputGroup } from 'react-bootstrap';
+import {
+  Button,
+  Container,
+  Dropdown,
+  FormControl,
+  InputGroup,
+} from 'react-bootstrap';
 import { handle_spell, spell_set } from '../actions/cmd_run';
 import { LogicalSize, appWindow } from '@tauri-apps/api/window';
-import { PhysicalSize } from '@tauri-apps/api/window';
+import { grip_vertical } from '../assets/icons';
 /*
  * 已知 bug: 多个 spell 同时执行时 会将执行结果同时替换
  */
@@ -29,8 +35,6 @@ function SearchBox() {
     const logical_size = size.toLogical(factor);
     const height = document.body.scrollHeight + 70;
     const width = logical_size.width;
-    console.log(`clientHeight: ${document.body.clientHeight}`);
-    console.log(`scrollHeight: ${document.body.scrollHeight}`);
     await appWindow.setSize(new LogicalSize(width, height));
   };
 
@@ -162,16 +166,21 @@ function SearchBox() {
 
   return (
     <Container className="search-bar-container">
-      <InputGroup className="mb-3">
-        <FormControl
-          className="search-bar"
-          placeholder="Spell here..."
-          aria-label="Search..."
-          aria-describedby="basic-addon2"
-          value={searchText} // 将搜索文本绑定到输入框的值
-          onChange={handleSearchInputChange} // 监听输入框变化
-        />
-      </InputGroup>
+      <div className="d-inline-flex">
+        <Button className="drag-button mb-3" data-tauri-drag-region>
+          {grip_vertical}
+        </Button>
+        <InputGroup className="mb-3">
+          <FormControl
+            className="search-bar"
+            placeholder="Spell here..."
+            aria-label="Search..."
+            aria-describedby="basic-addon2"
+            value={searchText} // 将搜索文本绑定到输入框的值
+            onChange={handleSearchInputChange} // 监听输入框变化
+          />
+        </InputGroup>
+      </div>
       <Dropdown
         show={showDropdown}
         onToggle={() => setShowDropdown(!showDropdown)}

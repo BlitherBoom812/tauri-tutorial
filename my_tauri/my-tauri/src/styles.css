@@ -113,11 +113,21 @@ button {
   }
 }
 
+.drag-button {
+  /* font-size: large; */
+  background-color: rgba(255, 255, 255, 0.6);
+  background-image: linear-gradient(-90deg, #29bcd9a4 0%, #276acebf 100%);
+  border-radius: 100px;
+  color: #ffffff;
+  border: 3px solid #0cb7e65e;
+}
 
 .search-bar {
   font-family: Consolas;
   font-weight: bold;
-  border: 3px solid #0cb7e6b2; /* 使用灰色粗边框 */
+  background-color: rgba(255, 255, 255, 0.6);
+  background-image: linear-gradient(90deg, #29bcd9a4 0%, #276acebf 100%);
+  border: 3px solid #0cb7e65e;
   border-radius: 100px;
   width: 100%;
 }
@@ -131,17 +141,26 @@ button {
 
 /* AutoCompleteDropdown.css */
 .custom-dropdown-menu {
+  font-family: Consolas;
+  font-weight: bold;
   border-radius: 0.5rem; /* 设置圆角边框 */
   background-color: rgba(255, 255, 255, 0.60); /* 设置背景为白色 */
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* 设置阴影 */
   width: 100%;
+  background-image: linear-gradient(to right, #30cfd066 0%, #33086766 100%);
 }
 
 .custom-dropdown-item {
+  font-family: Consolas;
+  font-weight: bold;
+  font-size: large;
   width: 100%;
   height: 50px;
 }
 
 .custom-dropdown-item.selected {
+  font-family: Consolas;
+  font-weight: bold;
   background-color: #f0f0f0; /* 浅灰色背景 */
+  background: linear-gradient(to right, #f6d365 0%, #fda085 100%);
 }
