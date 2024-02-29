@@ -115,4 +115,21 @@ button {
   font-weight: bold;
   border: 3px solid #0cb7e6b2; /* 使用灰色粗边框 */
   border-radius: 100px;
+  width: 100%;
+}
+
+/* AutoCompleteDropdown.css */
+.custom-dropdown-menu {
+  border-radius: 0.5rem; /* 设置圆角边框 */
+  background-color: rgba(255, 255, 255, 0.60); /* 设置背景为白色 */
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* 设置阴影 */
+  width: 100%;
+}
+
+.custom-dropdown-item {
+  width: 100%;
+}
+
+.custom-dropdown-item.selected {
+  background-color: #f0f0f0; /* 浅灰色背景 */
 }
