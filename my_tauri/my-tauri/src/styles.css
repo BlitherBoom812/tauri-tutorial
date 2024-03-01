@@ -123,8 +123,6 @@ button {
 }
 
 .search-bar {
-  font-family: Consolas;
-  font-weight: bold;
   color: linear-gradient(90deg, #29bcd9a4 0%, #276acebf 100%);
   background-color: rgba(255, 255, 255, 0.6);
   background-image: linear-gradient(90deg, #29bcd9a4 0%, #276acebf 100%);
@@ -166,21 +164,57 @@ button {
   background: linear-gradient(to right, #f6d365 0%, #fda085 100%);
 }
 
+.parent-div {
+  position: relative;
+  width: 100%;
+}
+
+.input-div {
+  top: 50%;
+  position:absolute;
+  z-index:1;
+}
+
+.display-div {
+  top: 14px;
+  left: 15px;
+  text-align: left;
+  position:absolute;
+  z-index:6;
+  padding: 0%;
+  margin: 0%;
+  pointer-events: none;
+  width: 100%;
+}
+
 .font-style {
   font-family: Consolas;
   font-weight: bold;
-  font-size: large;
-  padding: 0%;
-  margin: 0%;
+  font-size: medium;
+}
+
+.black-sytle {
+  stop-color:#000000; 
+  stop-opacity:1;
 }
 
 .red-style {
-  stop-color:#f6d365; 
+  stop-color:#e04c4c; 
   stop-opacity:1;
 }
 
 
 .blue-style {
-  stop-color:#fda085; 
+  stop-color:#fdd819; 
   stop-opacity:1;
+}
+
+.token {
+  position: relative;
+  width: fit-content;
+}
+
+.search-bar.font-style {
+  color: transparent;
+  caret-color: cyan;
 }

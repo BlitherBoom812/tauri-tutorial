@@ -11,7 +11,7 @@ import { handle_spell, spell_set } from '../actions/cmd_run';
 import { LogicalSize, appWindow } from '@tauri-apps/api/window';
 import { grip_vertical } from '../assets/icons';
 import '../styles.css';
-import { gradientText } from '../assets/gradient';
+import { GradientText } from './gradient';
 /*
  * 已知 bug: 多个 spell 同时执行时 会将执行结果同时替换
  */
@@ -133,7 +133,6 @@ function SearchBox() {
   useEffect(() => {
     resizeWindow();
   });
-
   // 定义处理搜索框变化的回调函数
   const handleSearchInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -165,25 +164,52 @@ function SearchBox() {
     setSearchText(search_value);
     onSuggestionHandler(search_value);
   };
-
   return (
     <Container className="search-bar-container">
       <div className="d-inline-flex">
-        <Button className="drag-button mb-3" data-tauri-drag-region>
+        <Button className="drag-button" data-tauri-drag-region>
           {grip_vertical}
         </Button>
-        <InputGroup className="mb-3">
-          <FormControl
-            className="search-bar gradient"
-            placeholder="Spell here..."
-            aria-label="Search..."
-            aria-describedby="basic-addon2"
-            value={searchText} // 将搜索文本绑定到输入框的值
-            onChange={handleSearchInputChange} // 监听输入框变化
-          />
-        </InputGroup>
+        <div className="parent-div">
+          <div className="display-div font-style">
+            {searchText.split(' ').map((word, index) =>
+              word.match(spell_prefix) ? (
+                <strong key={index} className="token">
+                  <GradientText
+                    text={word}
+                    svg_class=""
+                    font_style="font-style"
+                    from_style="red-style"
+                    to_style="blue-style"
+                  />{" "}
+                </strong>
+              ) : (
+                <strong key={index} className="token">
+                  <GradientText
+                    text={word}
+                    svg_class=""
+                    font_style="font-style"
+                    from_style="black-style"
+                    to_style="black-style"
+                  />{" "}
+                </strong>
+              )
+            )}
+          </div>
+          {/* {gradientText('wawefew', 'gradient-text', 'font-style', 'red-style', 'blue-style')}
+          {gradientText('word2', 'gradient-text', 'font-style', 'red-style', 'blue-style')} */}
+          <InputGroup>
+            <FormControl
+              className="search-bar font-style"
+              placeholder="Spell here..."
+              aria-label="Search..."
+              aria-describedby="basic-addon2"
+              value={searchText} // 将搜索文本绑定到输入框的值
+              onChange={handleSearchInputChange} // 监听输入框变化
+            />
+          </InputGroup>
+        </div>
       </div>
-      {/* {gradientText(searchText, 'font-style', 'red-style', 'blue-style')} */}
       <Dropdown
         show={showDropdown}
         onToggle={() => setShowDropdown(!showDropdown)}

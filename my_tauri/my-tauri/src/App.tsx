@@ -7,6 +7,9 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
+const searchbox = <SearchBox></SearchBox>;
+
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -14,7 +17,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/searchbox",
-    element: <SearchBox></SearchBox>
+    element: searchbox
   },
 ]);
 
