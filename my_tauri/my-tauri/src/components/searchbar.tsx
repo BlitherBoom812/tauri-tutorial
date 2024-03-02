@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Button,
@@ -12,9 +12,31 @@ import { LogicalSize, appWindow } from '@tauri-apps/api/window';
 import { grip_vertical } from '../assets/icons';
 import '../styles.css';
 import { GradientText } from './gradient';
+import { window_list } from './author';
 /*
  * 已知 bug: 多个 spell 同时执行时 会将执行结果同时替换
  */
+
+console.log(`appWindow.label: ${appWindow.label}`);
+console.log(`window_list.searchbar_name: ${window_list.searchbar_name}`);
+
+// const setCursorIngore = async (state: boolean) => {
+//   if (
+//     'searchbar_name' in window_list &&
+//     appWindow.label === window_list.searchbar_name
+//   ) {
+//     console.log('find searchbar name' + window_list.searchbar_name);
+//     await appWindow.setIgnoreCursorEvents(state);
+//   }
+// };
+
+appWindow.onResized(() => {
+  console.log('window resized');
+  console.log('resized scroll height: ' + document.body.scrollHeight);
+  console.log('resized client height: ' + document.body.clientHeight);
+  console.log('resized offset height: ' + document.body.offsetHeight);
+  console.log('resized scroll Top: ' + document.body.scrollTop);
+});
 
 function SearchBox() {
   const spell_reg = /<([^>]+)>/;
@@ -23,6 +45,20 @@ function SearchBox() {
   const [suggestionField, setSuggestionField] = useState(''); // record the field to be replaced
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1); // 新状态，用于跟踪当前选中的建议项的索引
   const [searchText, setSearchText] = useState('');
+  const [scrollTop, setScrollTop] = useState(0);
+
+  const messagesEndRef = useRef<null | HTMLDivElement>(null);
+
+  const bindHandleScroll = (e: any) => {
+    const localScrollTop =
+      (e.srcElement ? e.srcElement.documentElement.scrollTop : false) ||
+      window.pageYOffset ||
+      (e.srcElement ? e.srcElement.body.scrollTop : 0);
+
+    setScrollTop(localScrollTop);
+  };
+
+  window.addEventListener('scroll', bindHandleScroll);
 
   const onSuggestionHandler = (text: string) => {
     const suggestionMatch = match_rules_all(text);
@@ -31,12 +67,31 @@ function SearchBox() {
     setShowDropdown(condition);
   };
 
+  const scrollToBottom = () => {
+    console.log('scroll to bottom' + messagesEndRef.current);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    console.log('scroll to bottom');
+    console.log('resized scroll height: ' + document.body.scrollHeight);
+    console.log('resized client height: ' + document.body.clientHeight);
+    console.log('resized offset height: ' + document.body.offsetHeight);
+    console.log('resized scroll Top: ' + scrollTop);
+  };
+
   const resizeWindow = async () => {
     const factor = await appWindow.scaleFactor();
     const size = await appWindow.innerSize();
     const logical_size = size.toLogical(factor);
-    const height = document.body.scrollHeight + 70;
+    var height = document.body.scrollHeight;
     const width = logical_size.width;
+    const interval = 5;
+    const max_resize_time = 1000 / interval;
+    var resize_count = 0;
+    do {
+      scrollToBottom();
+      await appWindow.setSize(new LogicalSize(width, height));
+      height = height + interval;
+      resize_count++;
+    } while (scrollTop > 1 && resize_count < max_resize_time);
     await appWindow.setSize(new LogicalSize(width, height));
   };
 
@@ -133,6 +188,12 @@ function SearchBox() {
   useEffect(() => {
     resizeWindow();
   });
+
+  // useEffect(() => {
+  //   console.log('set ignore: ' + mouseIn);
+  //   setCursorIngore(false);
+  // }, [mouseIn]);
+
   // 定义处理搜索框变化的回调函数
   const handleSearchInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -165,77 +226,89 @@ function SearchBox() {
     onSuggestionHandler(search_value);
   };
   return (
-    <Container className="search-bar-container">
-      <div className="d-inline-flex">
-        <Button className="drag-button" data-tauri-drag-region>
-          {grip_vertical}
-        </Button>
-        <div className="parent-div">
-          <div className="display-div font-style">
-            {searchText.split(' ').map((word, index) =>
-              word.match(spell_prefix) ? (
-                <strong key={index} className="token">
-                  <GradientText
-                    text={word}
-                    svg_class=""
-                    font_style="font-style"
-                    from_style="red-style"
-                    to_style="blue-style"
-                  />{" "}
-                </strong>
-              ) : (
-                <strong key={index} className="token">
-                  <GradientText
-                    text={word}
-                    svg_class=""
-                    font_style="font-style"
-                    from_style="black-style"
-                    to_style="black-style"
-                  />{" "}
-                </strong>
-              )
-            )}
-          </div>
-          {/* {gradientText('wawefew', 'gradient-text', 'font-style', 'red-style', 'blue-style')}
-          {gradientText('word2', 'gradient-text', 'font-style', 'red-style', 'blue-style')} */}
-          <InputGroup>
-            <FormControl
-              className="search-bar font-style"
-              placeholder="Spell here..."
-              aria-label="Search..."
-              aria-describedby="basic-addon2"
-              value={searchText} // 将搜索文本绑定到输入框的值
-              onChange={handleSearchInputChange} // 监听输入框变化
-            />
-          </InputGroup>
-        </div>
-      </div>
-      <Dropdown
-        show={showDropdown}
-        onToggle={() => setShowDropdown(!showDropdown)}
+    <div className="d-flex flex-column">
+      <Container
+        className="search-bar-container"
       >
-        <Dropdown.Menu className="custom-dropdown-menu">
-          {filteredSuggestions.length > 0 ? (
-            filteredSuggestions.map((suggestion, index) => (
-              <Dropdown.Item
-                key={index}
-                onClick={() => onSelectHandler(suggestion)}
-                className={`custom-dropdown-item ${
-                  index === selectedSuggestionIndex ? 'selected' : ''
-                }`}
-              >
-                {suggestion}
-                <br />
+        <div className="d-flex">
+          <Button className="drag-button" data-tauri-drag-region>
+            {grip_vertical}
+          </Button>
+          <div className="parent-div">
+            <div className="display-div font-style">
+              {searchText.split(' ').map((word, index) =>
+                word.match(spell_prefix) ? (
+                  <strong key={index} className="token">
+                    <GradientText
+                      text={word}
+                      svg_class="gradient-text-svg"
+                      font_style="font-style"
+                      from_style="red-style"
+                      to_style="blue-style"
+                    />{' '}
+                  </strong>
+                ) : (
+                  <strong key={index} className="token">
+                    <GradientText
+                      text={word}
+                      svg_class="gradient-text-svg"
+                      font_style="font-style"
+                      from_style="black-style"
+                      to_style="black-style"
+                    />{' '}
+                  </strong>
+                )
+              )}
+            </div>
+            <InputGroup>
+              <FormControl
+                className="search-bar font-style"
+                placeholder="Spell here..."
+                aria-label="Search..."
+                aria-describedby="basic-addon2"
+                value={searchText} // 将搜索文本绑定到输入框的值
+                onChange={handleSearchInputChange} // 监听输入框变化
+              />
+            </InputGroup>
+          </div>
+        </div>
+        <Dropdown
+          show={showDropdown}
+          onToggle={() => setShowDropdown(!showDropdown)}
+        >
+          <Dropdown.Menu className="custom-dropdown-menu">
+            {filteredSuggestions.length > 0 ? (
+              filteredSuggestions.map((suggestion, index) => (
+                <Dropdown.Item
+                  key={index}
+                  onClick={() => onSelectHandler(suggestion)}
+                  className={`custom-dropdown-item ${
+                    index === selectedSuggestionIndex ? 'selected' : ''
+                  }`}
+                >
+                  {suggestion}
+                  <br />
+                </Dropdown.Item>
+              ))
+            ) : (
+              <Dropdown.Item className="custom-dropdown-item">
+                No Matches
               </Dropdown.Item>
-            ))
-          ) : (
-            <Dropdown.Item className="custom-dropdown-item">
-              No Matches
-            </Dropdown.Item>
-          )}
-        </Dropdown.Menu>
-      </Dropdown>
-    </Container>
+            )}
+            <div
+              ref={messagesEndRef}
+              style={{
+                color: 'white',
+                clear: 'both',
+                height: '1px',
+                width: '100%',
+                float: 'left',
+              }}
+            ></div>
+          </Dropdown.Menu>
+        </Dropdown>
+      </Container>
+    </div>
   );
 }
 

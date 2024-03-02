@@ -8,7 +8,6 @@ function getTextWidth(str = '') {
   document.body.appendChild(dom);
   const width = dom.clientWidth;
   const height = dom.clientHeight;
-  console.log(`width: ${width}`);
   document.body.removeChild(dom);
   return width;
 }
@@ -31,7 +30,7 @@ const GradientText: React.FC<GradientTextProps> = ({
   const uuid = uuidv4();
   const grad_id = `grad-${uuid}`;
   return (
-    <svg className={svg_class} style={{ width: getTextWidth(text) + 'px' }}>
+    <svg className={svg_class} style={{ width: getTextWidth(text) + 'px'}}>
       <defs>
         <linearGradient id={grad_id} x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" className={from_style} />

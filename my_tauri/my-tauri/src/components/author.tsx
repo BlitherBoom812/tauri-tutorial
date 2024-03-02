@@ -1,18 +1,22 @@
 import '../styles/shining_txt.css';
-import { WebviewWindow } from '@tauri-apps/api/window';
+import { WebviewWindow, appWindow } from '@tauri-apps/api/window';
+
+const window_list = {
+  searchbar_name: 'searchbar'
+}
 
 function createWindow() {
-  const webview = new WebviewWindow('searchbox', {
+  const webview = new WebviewWindow(window_list.searchbar_name, {
     url: 'searchbox',
     fullscreen: false,
-    resizable: true,
+    resizable: false,
     visible: true,
-    title: 'searchbox',
+    title: window_list.searchbar_name,
     alwaysOnTop: true,
     decorations: false,
     transparent: true,
     width: 1000,
-    height: 1000,
+    height: 100,
     center: true,
   });
   // since the webview window is created asynchronously,
@@ -29,7 +33,12 @@ function createWindow() {
   });
   return webview;
 }
-const webview = createWindow();
+
+var webview: WebviewWindow[] = [];
+
+if (appWindow.label === 'main') {
+  webview.push(createWindow());
+}
 
 function Author() {
   const text = 'Made by BlitherBoom812';
@@ -40,10 +49,12 @@ function Author() {
     <div
       data-tauri-drag-region
       onClick={async () => {
-        if (await webview.isVisible()) {
-          webview.hide();
-        } else {
-          webview.show();
+        for (let i = 0; i < webview.length; i++) {
+          if (await webview[i].isVisible()) {
+            webview[i].hide();
+          } else {
+            webview[i].show();
+          }
         }
       }}
     >
@@ -55,5 +66,6 @@ function Author() {
 }
 
 export default Author;
-
-// task: 1. draggable(ok) 2. resize with content(ok) 3. shining spell(half) 4. esc exit(ok) 5. colorful!(ok)
+export {
+  window_list
+}

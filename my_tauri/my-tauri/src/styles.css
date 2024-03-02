@@ -28,6 +28,12 @@
   text-align: center;
 }
 
+
+/* hide scrollbar */
+::-webkit-scrollbar{
+  display: none;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -217,4 +223,8 @@ button {
 .search-bar.font-style {
   color: transparent;
   caret-color: cyan;
+}
+
+.gradient-text-svg {
+  height: 50px;
 }
