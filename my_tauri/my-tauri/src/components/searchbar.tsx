@@ -14,11 +14,13 @@ import '../styles.css';
 import { GradientText } from './gradient';
 import { window_list } from './author';
 import { listen } from '@tauri-apps/api/event';
-import { searchbar_focus } from '../utils/key_binding';
+import { searchbar_hide, searchbar_show } from '../utils/key_binding';
 
 /*
  * 已知 bug: 多个 spell 同时执行时 会将执行结果同时替换
  * 先解决单 spell 执行的问题。
+ * 多 spell 需要解决的问题：1. 异步执行；2. 统一的 spell 检测格式（将 完整/非完整 spell 与普通 text 区分开。
+ * 加一个隐藏按钮
  */
 
 console.log(`appWindow.label: ${appWindow.label}`);
@@ -118,9 +120,12 @@ function SearchBox() {
   const InputRef = useRef<null | any>(null);
 
   const shortcut_function = (event: any) => {
+    console.log(event);
     // route to proper shortcut
-    if (event.payload.content === searchbar_focus) {
+    if (event.payload.content === searchbar_show) {
+      console.log('open searchbar');
       // set focus on search bar
+      appWindow.show();
       appWindow.isMinimized().then(async (res) => {
         if (res) {
           await appWindow.unminimize();
@@ -128,7 +133,10 @@ function SearchBox() {
         await appWindow.setFocus();
         document.getElementById('searchbar-input')?.focus();
       });
-    }
+    } else if (event.payload.content === searchbar_hide) {
+      console.log("hide searchbar")
+      appWindow.hide();
+    } 
   };
 
   subscribe(shortcut_function, 'searchbar');

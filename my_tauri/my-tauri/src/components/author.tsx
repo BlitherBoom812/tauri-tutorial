@@ -7,7 +7,7 @@ import {
   isRegistered,
 } from '@tauri-apps/api/globalShortcut';
 import { emit, once } from '@tauri-apps/api/event';
-import { searchbar_focus } from '../utils/key_binding';
+import { key_bindings, searchbar_show } from '../utils/key_binding';
 
 const window_list = {
   searchbar_name: 'searchbar',
@@ -48,20 +48,27 @@ if (appWindow.label === 'main') {
   // create window
   webview.push(createWindow());
 
-  // Shortcut
-  if (!(await isRegistered(searchbar_focus))) {
-    console.log('register shortcut: ' + searchbar_focus);
-    await register(searchbar_focus, () => {
-      emit('shortcut', {
-        content: searchbar_focus,
+
+  for(var i = 0;i < key_bindings.length;i++) {
+    // Shortcut
+    if (!(await isRegistered(key_bindings[i]))) {
+      console.log('register shortcut: ' + key_bindings[i]);
+      const payload = {
+        content: key_bindings[i],
+      }
+      // console.log(`payload: ${JSON.stringify(payload)}`);
+      await register(key_bindings[i], () => {
+        emit('shortcut', payload);
       });
-    });
+    }
   }
 
   once('tauri://close-requested', (event) => {
     console.log(event);
-    unregister(searchbar_focus);
-    console.log('unregister shortcut: ' + searchbar_focus);
+    for(var i = 0;i < key_bindings.length;i++) {
+      unregister(key_bindings[i]);
+      console.log('unregister shortcut: ' + key_bindings[i]);
+    }
     for (let i = 0; i < webview.length; i++) {
       webview[i].close();
     }
