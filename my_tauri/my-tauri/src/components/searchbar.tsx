@@ -18,6 +18,7 @@ import { searchbar_focus } from '../utils/key_binding';
 
 /*
  * 已知 bug: 多个 spell 同时执行时 会将执行结果同时替换
+ * 先解决单 spell 执行的问题。
  */
 
 console.log(`appWindow.label: ${appWindow.label}`);
@@ -60,6 +61,50 @@ const subscribe = (callback: (event: any) => void, subscriber_id: string) => {
     callback: callback,
     subscriber_id: subscriber_id,
   });
+};
+
+const SpellText: React.FC<{ text: string; spell_prefix: RegExp }> = ({
+  text,
+  spell_prefix,
+}) => {
+  // match text
+  const text_array = text.split(' ');
+  var spell_status = false;
+  const display_array: { text: string; isSpell: boolean }[] = [];
+  for (var i = 0; i < text_array.length; i++) {
+    if (spell_prefix.test(text_array[i])) {
+      spell_status = true;
+    }
+    display_array.push({ text: text_array[i], isSpell: spell_status });
+  }
+
+  return (
+    <div className="display-div font-style">
+      {display_array.map((item, index) =>
+        item.isSpell ? (
+          <strong key={index} className="token">
+            <GradientText
+              text={item.text}
+              svg_class="gradient-text-svg"
+              font_style="font-style"
+              from_style="red-style"
+              to_style="blue-style"
+            />{' '}
+          </strong>
+        ) : (
+          <strong key={index} className="token">
+            <GradientText
+              text={item.text}
+              svg_class="gradient-text-svg"
+              font_style="font-style"
+              from_style="black-style"
+              to_style="black-style"
+            />{' '}
+          </strong>
+        )
+      )}
+    </div>
+  );
 };
 
 function SearchBox() {
@@ -259,31 +304,10 @@ function SearchBox() {
             {grip_vertical}
           </Button>
           <div className="parent-div">
-            <div className="display-div font-style">
-              {searchText.split(' ').map((word, index) =>
-                word.match(spell_prefix) ? (
-                  <strong key={index} className="token">
-                    <GradientText
-                      text={word}
-                      svg_class="gradient-text-svg"
-                      font_style="font-style"
-                      from_style="red-style"
-                      to_style="blue-style"
-                    />{' '}
-                  </strong>
-                ) : (
-                  <strong key={index} className="token">
-                    <GradientText
-                      text={word}
-                      svg_class="gradient-text-svg"
-                      font_style="font-style"
-                      from_style="black-style"
-                      to_style="black-style"
-                    />{' '}
-                  </strong>
-                )
-              )}
-            </div>
+            <SpellText
+              text={searchText}
+              spell_prefix={spell_prefix}
+            ></SpellText>
             <InputGroup>
               <FormControl
                 ref={InputRef}
