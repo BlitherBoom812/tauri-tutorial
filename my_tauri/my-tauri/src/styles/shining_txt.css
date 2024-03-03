@@ -6,35 +6,35 @@ div {
     font-size: 24px;
     color: transparent;
 }
-span {
+span.shining {
     animation: shan 4s linear infinite;
     text-transform: uppercase;
 }
-div span:nth-child(1){
+div span.shining:nth-child(1){
     animation-delay: 0s;
 }
-div span:nth-child(2){
+div span.shining:nth-child(2){
     animation-delay: .4s;
 }
-div span:nth-child(3){
+div span.shining:nth-child(3){
     animation-delay: .8s;
 }
-div span:nth-child(4){
+div span.shining:nth-child(4){
     animation-delay: 1.2s;
 }
-div span:nth-child(5){
+div span.shining:nth-child(5){
     animation-delay: 1.6s;
 }
-div span:nth-child(6){
+div span.shining:nth-child(6){
     animation-delay: 2s;
 }
-div span:nth-child(7){
+div span.shining:nth-child(7){
     animation-delay: 2.4s;
 }
-div span:nth-child(8){
+div span.shining:nth-child(8){
     animation-delay: 2.8s;
 }
-div span:nth-child(9){
+div span.shining:nth-child(9){
     animation-delay: 3.2s;
 }
 @keyframes shan {

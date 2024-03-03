@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   Button,
@@ -13,6 +13,9 @@ import { grip_vertical } from '../assets/icons';
 import '../styles.css';
 import { GradientText } from './gradient';
 import { window_list } from './author';
+import { listen } from '@tauri-apps/api/event';
+import { searchbar_focus } from '../utils/key_binding';
+
 /*
  * 已知 bug: 多个 spell 同时执行时 会将执行结果同时替换
  */
@@ -20,61 +23,89 @@ import { window_list } from './author';
 console.log(`appWindow.label: ${appWindow.label}`);
 console.log(`window_list.searchbar_name: ${window_list.searchbar_name}`);
 
-// const setCursorIngore = async (state: boolean) => {
-//   if (
-//     'searchbar_name' in window_list &&
-//     appWindow.label === window_list.searchbar_name
-//   ) {
-//     console.log('find searchbar name' + window_list.searchbar_name);
-//     await appWindow.setIgnoreCursorEvents(state);
-//   }
-// };
+const checkCurrentWindow = async () => {
+  return (
+    'searchbar_name' in window_list &&
+    appWindow.label === window_list.searchbar_name
+  );
+};
 
-appWindow.onResized(() => {
-  console.log('window resized');
-  console.log('resized scroll height: ' + document.body.scrollHeight);
-  console.log('resized client height: ' + document.body.clientHeight);
-  console.log('resized offset height: ' + document.body.offsetHeight);
-  console.log('resized scroll Top: ' + document.body.scrollTop);
+if (await checkCurrentWindow()) {
+  console.log('current searchbar name: ' + window_list.searchbar_name);
+  await appWindow.setIgnoreCursorEvents(false);
+}
+
+const unlisten = async (event_name: string, callback: (event: any) => void) => {
+  return await listen(event_name, (event) => {
+    callback(event);
+  });
+};
+
+const subscribers: { callback: (event: any) => void; subscriber_id: string }[] =
+  [];
+unlisten('shortcut', (event) => {
+  for (const subscriber of subscribers) {
+    subscriber.callback(event);
+  }
 });
+
+const subscribe = (callback: (event: any) => void, subscriber_id: string) => {
+  // if not exist, then push
+  if (
+    subscribers.find((subscriber) => subscriber.subscriber_id === subscriber_id)
+  ) {
+    return;
+  }
+  subscribers.push({
+    callback: callback,
+    subscriber_id: subscriber_id,
+  });
+};
 
 function SearchBox() {
   const spell_reg = /<([^>]+)>/;
   const spell_prefix = /<([^>]+)/;
   const [showDropdown, setShowDropdown] = useState(false);
-  const [suggestionField, setSuggestionField] = useState(''); // record the field to be replaced
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1); // 新状态，用于跟踪当前选中的建议项的索引
   const [searchText, setSearchText] = useState('');
-  const [scrollTop, setScrollTop] = useState(0);
 
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
+  const InputRef = useRef<null | any>(null);
 
-  const bindHandleScroll = (e: any) => {
-    const localScrollTop =
-      (e.srcElement ? e.srcElement.documentElement.scrollTop : false) ||
-      window.pageYOffset ||
-      (e.srcElement ? e.srcElement.body.scrollTop : 0);
-
-    setScrollTop(localScrollTop);
+  const shortcut_function = (event: any) => {
+    // route to proper shortcut
+    if (event.payload.content === searchbar_focus) {
+      // set focus on search bar
+      appWindow.isMinimized().then(async (res) => {
+        if (res) {
+          await appWindow.unminimize();
+        }
+        await appWindow.setFocus();
+        document.getElementById('searchbar-input')?.focus();
+      });
+    }
   };
 
-  window.addEventListener('scroll', bindHandleScroll);
+  subscribe(shortcut_function, 'searchbar');
+
+  const getScrollTop = () => {
+    const localScrollTop =
+      (document ? document.documentElement.scrollTop : false) ||
+      window.pageYOffset ||
+      (document ? document.body.scrollTop : 0);
+    return localScrollTop;
+  };
+
+  // window.addEventListener('scroll', bindHandleScroll);
 
   const onSuggestionHandler = (text: string) => {
     const suggestionMatch = match_rules_all(text);
     const condition = suggestionMatch ? suggestionMatch[0].length > 0 : false;
-    setSuggestionField(suggestionMatch ? suggestionMatch[0] : '');
     setShowDropdown(condition);
   };
 
   const scrollToBottom = () => {
-    console.log('scroll to bottom' + messagesEndRef.current);
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    console.log('scroll to bottom');
-    console.log('resized scroll height: ' + document.body.scrollHeight);
-    console.log('resized client height: ' + document.body.clientHeight);
-    console.log('resized offset height: ' + document.body.offsetHeight);
-    console.log('resized scroll Top: ' + scrollTop);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'instant' });
   };
 
   const resizeWindow = async () => {
@@ -83,27 +114,19 @@ function SearchBox() {
     const logical_size = size.toLogical(factor);
     var height = document.body.scrollHeight;
     const width = logical_size.width;
-    const interval = 5;
+    const interval = 10;
     const max_resize_time = 1000 / interval;
     var resize_count = 0;
+    var scrollTop = 0;
     do {
-      scrollToBottom();
+      scrollTop = getScrollTop();
       await appWindow.setSize(new LogicalSize(width, height));
       height = height + interval;
       resize_count++;
-    } while (scrollTop > 1 && resize_count < max_resize_time);
-    await appWindow.setSize(new LogicalSize(width, height));
+    } while (scrollTop > 0 && resize_count < max_resize_time);
   };
 
   const onSelectHandler = (value: any) => {
-    // if (suggestionField && suggestionField.length > 0) {
-    //   const suggested_text = searchText.replace(suggestionField, value);
-    //   console.log(`search text: ${searchText}`);
-    //   console.log(`suggestion field: ${suggestionField}`);
-    //   console.log(`suggested_text: ${suggested_text}`);
-    //   setSearchText(suggested_text);
-    // }
-
     const match = match_rules_all(searchText);
     if (match && match.length > 0) {
       const to_be_matched = match[match.length - 1];
@@ -127,7 +150,6 @@ function SearchBox() {
   };
 
   const match_rules_all = (text: string) => {
-    // const match = text.toLowerCase().match(spell_prefix);
     const match_list = text.split(' ');
     if (match_list) {
       return match_list;
@@ -139,7 +161,6 @@ function SearchBox() {
   const match_rules = (text: string) => {
     const match = match_rules_all(text);
     if (match) {
-      // console.log('matching: ' + match);
       const to_be_matched = match[match.length - 1].replace('<', '');
       return to_be_matched;
     } else {
@@ -173,9 +194,6 @@ function SearchBox() {
         setSelectedSuggestionIndex(-1); // 重置选中的建议项索引
       } else if (e.code === 'Backspace') {
         // 删除键
-        // emit('searchbox', {
-        //   content: "searchbox-backspace"
-        // });
       }
     };
 
@@ -185,14 +203,15 @@ function SearchBox() {
     };
   }, [filteredSuggestions, selectedSuggestionIndex, onSelectHandler]);
 
+  // auto scrollToBottom
   useEffect(() => {
-    resizeWindow();
+    scrollToBottom();
   });
 
-  // useEffect(() => {
-  //   console.log('set ignore: ' + mouseIn);
-  //   setCursorIngore(false);
-  // }, [mouseIn]);
+  // auto resize window when text change
+  useEffect(() => {
+    resizeWindow();
+  }, [searchText]);
 
   // 定义处理搜索框变化的回调函数
   const handleSearchInputChange = async (
@@ -227,11 +246,16 @@ function SearchBox() {
   };
   return (
     <div className="d-flex flex-column">
-      <Container
-        className="search-bar-container"
-      >
+      <Container className="search-bar-container">
         <div className="d-flex">
-          <Button className="drag-button" data-tauri-drag-region>
+          <Button
+            className="drag-button"
+            data-tauri-drag-region
+            onClick={() => {
+              console.log(InputRef.current.focus);
+              InputRef.current.focus();
+            }}
+          >
             {grip_vertical}
           </Button>
           <div className="parent-div">
@@ -262,6 +286,8 @@ function SearchBox() {
             </div>
             <InputGroup>
               <FormControl
+                ref={InputRef}
+                id="searchbar-input"
                 className="search-bar font-style"
                 placeholder="Spell here..."
                 aria-label="Search..."

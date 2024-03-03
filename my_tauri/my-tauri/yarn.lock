@@ -1438,6 +1438,11 @@ react-is@^18.2.0:
   resolved "https://registry.npmmirror.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
+react-keyevent@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/react-keyevent/-/react-keyevent-1.1.0.tgz#fd3f8b6da0f46a01ed0c187fed5a18277abd9436"
+  integrity sha512-E3WT+CaYKURgvWmM6mBLsD0SytABzt2qqv/g6HOYyClW07J2IWe8gF1ZKoI2Dx/8CgqyhSi8xhcqgjmM1uLZPg==
+
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.npmmirror.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"

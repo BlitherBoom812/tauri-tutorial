@@ -37,6 +37,9 @@
         "removeDir": true,
         "removeFile": true,
         "renameFile": true
+      },
+      "globalShortcut": {
+        "all": true
       }
     },
     "bundle": {
