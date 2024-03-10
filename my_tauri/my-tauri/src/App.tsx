@@ -1,23 +1,17 @@
 import './App.css';
-import Author from './components/author';
 
-import SearchBox from './components/searchbar';
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import { ThreeMap } from './components/three_map';
 
-const searchbox = <SearchBox></SearchBox>;
-
+const three_map = <ThreeMap></ThreeMap>
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Author/>
-  },
-  {
-    path: "/searchbox",
-    element: searchbox
+    path: "/three_map",
+    element: three_map
   },
 ]);
 
