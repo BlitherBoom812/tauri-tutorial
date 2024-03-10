@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8' />
+    <title>CMU Data</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.1.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+
+<body>
+
+<div id='map'></div>
+
+<script>
+
+//Mapbox Access Tokens
+mapboxgl.accessToken = 'pk.eyJ1IjoibWpkYW5pZWxzb24iLCJhIjoiY2p2bzFlbnZ5MW5pbTN5cGJ2YWp2MW9vaiJ9.kAaZq3iyJwvrMLK7XDs_qw';
+
+var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/mjdanielson/cjzej9la703k51clizztqhjcc', // stylesheet location
+    center: [-79.942829, 40.443399], // starting position [lng, lat] 
+    pitch: 45, // pitch in degrees
+    bearing: -180, // bearing in degrees
+    zoom: 15 // starting zoom 
+});
+
+map.on('load', function() {
+
+//initialize popup 
+var popup = new mapboxgl.Popup({ 
+        closeButton: false,
+    closeOnClick: false,
+});
+
+ // When a click event occurs on a feature in the states layer, open a popup at the
+// location of the click, with description HTML from its properties.
+map.on('mouseenter', 'CO2 Emissions', function (e) {
+//change the cursor style as a UI indicator
+map.getCanvas().style.cursor = 'pointer';
+
+// Create variables for your tabular information 
+var aggregate = e.features[0].properties.CO2e_Emissions_Aggregate;
+var agg_freq = e.features[0].properties.CO2e_Emissions_Aggregate_Frq;
+
+// Populate the popup and set its coordinates
+// based on the feature found.
+popup.setLngLat(e.lngLat)
+.setHTML('<strong> 二氧化碳总排放量: </strong>'+ aggregate + '<p> <strong> 二氧化碳排放频率: </strong>' + agg_freq + '</p>')
+.addTo(map);
+});
+
+// Change it back to a pointer when it leaves.
+map.on('mouseleave', 'CO2 Emissions', function () {
+map.getCanvas().style.cursor = '';
+popup.remove();
+});
+
+});
+
+</script>
+
+</body>
+
+</html>
